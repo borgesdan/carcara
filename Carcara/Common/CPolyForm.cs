@@ -222,15 +222,13 @@ namespace Microsoft.Xna.Framework
 
         public bool Equals(CPolyForm other)
         {
-            if(other.points.Length == this.points.Length)
+            if (other.points.Length != this.points.Length)
+                return false;
+
+            for (int i = 0; i < other.points.Length; i++)
             {
-                for(int i = 0; i < other.points.Length; i++)
-                {
-                    if(other.points[i] != points[i])
-                    {
-                        return false;
-                    }
-                }
+                if (other.points[i] != points[i])
+                    return false;
             }
 
             return true;
