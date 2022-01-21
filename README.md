@@ -1,4 +1,4 @@
-<h1>Nome do Projeto</h1>
+<h1>Carcará</h1>
 <p>Carcara é um projeto de biblioteca que expõe classes para facilitar o desenvolvimento de jogos 2D com MonoGame 3.8.</p>
 
 <h2>Conteúdo</h2>
