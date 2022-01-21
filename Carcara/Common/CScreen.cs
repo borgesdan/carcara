@@ -10,11 +10,11 @@ namespace Microsoft.Xna.Framework
     public class CScreen : IDisposable
     {
         /// <summary>Obtém a classe Game do jogo.</summary>
-        public Game Game { get; }
+        protected Game Game { get; }
         /// <summary>Obtém acesso ao dispositivo gráfico.</summary>
-        public GraphicsDevice GraphicsDevice { get => Game.GraphicsDevice; }
+        protected GraphicsDevice GraphicsDevice { get => Game.GraphicsDevice; }
         /// <summary>Obtém acesso aos conteúdos do jogo.</summary>
-        public ContentManager Content { get => Game.Content; }
+        protected ContentManager Content { get => Game.Content; }
         /// <summary>Obtém ou define o nome da tela.</summary>
         public string Name { get; }
         /// <summary>Obtém ou define se a tela está habilitada a sofrer atualizações.</summary>

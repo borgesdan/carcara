@@ -5,7 +5,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa uma animação 2D que armazena texturas e recortes.
     /// </summary>
-    public class CAnimation : ICTransformable, ICDrawTransformable
+    public class CAnimation : ICTransformable, ICDrawTransformable, ICUpdatable
     {
         double elapsedTime = 0;
 
@@ -61,11 +61,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>
         /// Inicializa uma nova instância da classe.
-        /// </summary>
-        /// <param name="items">Define a quantidade de itens a serem utilizados na animação.</param>
+        /// </summary>        
         /// <param name="time">Define o tempo de exibição de cada item.</param>
         /// <param name="isLooping">Define se animação se repetirá quando chegar ao fim.</param>
-        public CAnimation(CAnimationItem[] items, float time = 0.1F, bool isLooping = true)
+        /// <param name="items">Define a quantidade de itens a serem utilizados na animação.</param>
+        public CAnimation(float time, bool isLooping, params CAnimationItem[] items)
         {
             Items = items;
             Time = time;
@@ -75,10 +75,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Inicializa uma nova instância da classe.
         /// </summary>
-        /// <param name="textures">Define as texturas que serão convertidas em items.</param>
         /// <param name="time">Define o tempo de exibição de cada item.</param>
         /// <param name="isLooping">Define se animação se repetirá quando chegar ao fim.</param>
-        public CAnimation(Texture2D[] textures, float time = 0.1F, bool isLooping = true)            
+        /// <param name="textures">Define as texturas que serão convertidas em items.</param>
+        public CAnimation(float time, bool isLooping, params Texture2D[] textures)
         {
             Items = new CAnimationItem[textures.Length];
 
@@ -116,6 +116,12 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Finished = source.Finished;
             this.FrameChanged = source.FrameChanged;
             this.ItemChanged = source.ItemChanged;
+        }
+
+        public CAnimationItem this[int index]
+        {
+            get => Items[index];
+            set => Items[index] = value;
         }
 
         /// <summary>
@@ -185,6 +191,25 @@ namespace Microsoft.Xna.Framework.Graphics
 
             //spriteBatch.Draw(CurrentTexture, Vector2.Zero, CurrentFrame, Color.White);
             spriteBatch.Draw(CurrentTexture, args);
+        }
+
+        /// <summary>
+        /// Redefine o tempo corrente da animação, as proprieades <see cref="CurrentFrameIndex"/> e <see cref="CurrentItemIndex"/> para o valor 0.
+        /// </summary>
+        public void Reset()
+        {
+            elapsedTime = 0;
+            CurrentFrameIndex = 0;
+            CurrentItemIndex = 0;
+            IsFinished = false;
+        }
+
+        /// <summary>
+        /// Redefine os items da animação.
+        /// </summary>
+        public void SetItems(CAnimationItem[] items)
+        {
+            Items = items;
         }
     }
 }

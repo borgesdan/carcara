@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.Xna.Framework.Input
 {
     /// <summary>Classe que gerencia e auxilia nas entradas do jogador com um teclado.</summary>
-    public class CKeyboardHelper : ICInput<Keys>
+    public class CKeyboard : ICInput<Keys>
     {
         /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
@@ -13,13 +13,13 @@
         /// <summary>
         /// Inicializa uma nova instância de KeyboardHelper.
         /// </summary>
-        public CKeyboardHelper() { }
+        public CKeyboard() { }
 
         /// <summary>
         /// Inicializa uma nova instância de KeyboardHelper.
         /// </summary>
         /// <param name="state">O estado inicializado.</param>
-        public CKeyboardHelper(KeyboardState state)
+        public CKeyboard(KeyboardState state)
         {
             State = state;
         }
@@ -28,7 +28,7 @@
         /// Inicializa uma nova instância da classe como cópia de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
-        public CKeyboardHelper(CKeyboardHelper source)
+        public CKeyboard(CKeyboard source)
         {
             IsEnabled = source.IsEnabled;
             State = source.State;
@@ -47,14 +47,12 @@
         }
 
         /// <summary>Verifica se a tecla está sendo pressionada.</summary>
-        /// <param name="key">A tecla a ser verificada.</param>
         public bool Hold(Keys key)
         {
             return State.IsKeyDown(key);
         }
 
         /// <summary>Verifica se a tecla estava liberada e foi pressionada.</summary>
-        /// <param name="key">A tecla a ser verificada.</param>
         public bool Pressed(Keys key)
         {
             return OldState.IsKeyUp(key) 
@@ -62,10 +60,9 @@
         }        
 
         /// <summary>Verifica se a tecla está liberada.</summary>   
-        /// <param name="key">A tecla a ser verificada.</param>
         public bool Released(Keys key)
         {
             return State.IsKeyUp(key);
-        }
+        }        
     }
 }

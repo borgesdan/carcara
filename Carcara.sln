@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carcara", "Carcara\Carcara.csproj", "{4F29C87C-597B-4DD7-B277-58D6ACF384C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Test\Sample.csproj", "{61A8F7EE-F4F0-4199-961C-19C2230499AB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{4F29C87C-597B-4DD7-B277-58D6ACF384C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F29C87C-597B-4DD7-B277-58D6ACF384C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F29C87C-597B-4DD7-B277-58D6ACF384C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61A8F7EE-F4F0-4199-961C-19C2230499AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61A8F7EE-F4F0-4199-961C-19C2230499AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61A8F7EE-F4F0-4199-961C-19C2230499AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61A8F7EE-F4F0-4199-961C-19C2230499AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

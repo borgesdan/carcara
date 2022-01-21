@@ -4,8 +4,17 @@
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <Company>Danilo Borges Santos</Company>
     <Authors>Danilo Borges Santos</Authors>
-    <Description>Uma biblioteca de classes para auxiliar no desenvolvimento do framework MonoGame</Description>
+    <Description>Uma biblioteca de classes para auxiliar no desenvolvimento de jogos 2D com framework MonoGame.</Description>
+    <PackageProjectUrl>https://github.com/borgesdan/carcara</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
       <PrivateAssets>All</PrivateAssets>

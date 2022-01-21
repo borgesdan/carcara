@@ -7,24 +7,34 @@ namespace Microsoft.Xna.Framework.Input
     /// <summary>
     /// Gerencia as entradas do usuário ao utilizar um mapeamento das teclas com relação aos botões do GamePad.
     /// </summary>
-    public class CGamePadKeyHelper : ICInput<Buttons>
+    public class CMappedGamePad : ICInput<Buttons>
     {
         /// <summary>Obtém os estados do GamePad.</summary>
-        public CGamePadHelper CurrentGamePad { get; }
+        public CGamePad CurrentGamePad { get; }
         /// <summary>Obtém os estados do teclado.</summary>
-        public CKeyboardHelper CurrentKeyboard { get; }
+        public CKeyboard CurrentKeyboard { get; }
         /// <summary>Obtém ou define o mapa de referência entre teclas e botões.</summary>
         public CKeyButtonMap Map { get; set; }
         /// <summary>Obtém ou define se o teclado pode ser utilizado mesmo com o GamePad conectado.</summary>
         public bool AlwaysEnableKeyboard { get; set; } = true;
+        /// <summary>Obtém ou define o index do jogador.</summary>
+        public PlayerIndex PlayerIndex { get => CurrentGamePad.PlayerIndex; set => CurrentGamePad.SetIndex(value); }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe.
+        /// </summary>
+        /// <param name="map">O mapeamento tecla-botão (pode ser null).</param>
+        public CMappedGamePad(CKeyButtonMap map) : this(new CGamePad(), new CKeyboard(), map)
+        {
+        }
 
         /// <summary>
         /// Inicializa uma nova instância da classe.
         /// </summary>
         /// <param name="gamePad">A instância do GamePad a ser utilizada.</param>
         /// <param name="keyboard">A instância do teclado a ser utilizada.</param>
-        /// <param name="map">O mapeamento tecla-botão.</param>
-        public CGamePadKeyHelper(CGamePadHelper gamePad, CKeyboardHelper keyboard, CKeyButtonMap map)
+        /// <param name="map">O mapeamento tecla-botão (pode ser null).</param>
+        public CMappedGamePad(CGamePad gamePad, CKeyboard keyboard, CKeyButtonMap map)
         {
             CurrentGamePad = gamePad;
             CurrentKeyboard = keyboard;
@@ -35,10 +45,10 @@ namespace Microsoft.Xna.Framework.Input
         /// Inicializa uma nova instância da classe como cópia de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
-        public CGamePadKeyHelper(CGamePadKeyHelper source)
+        public CMappedGamePad(CMappedGamePad source)
         {
-            CurrentGamePad = new CGamePadHelper(source.CurrentGamePad);
-            CurrentKeyboard = new CKeyboardHelper(source.CurrentKeyboard);
+            CurrentGamePad = new CGamePad(source.CurrentGamePad);
+            CurrentKeyboard = new CKeyboard(source.CurrentKeyboard);
             Map = new CKeyButtonMap(source.Map);
             AlwaysEnableKeyboard = source.AlwaysEnableKeyboard;
         }
@@ -51,10 +61,21 @@ namespace Microsoft.Xna.Framework.Input
             CurrentKeyboard.Update(gameTime);
         }
 
+        /// <summary>
+        /// Redefine o index do controle.
+        /// </summary>        
+        public void SetIndex(PlayerIndex index)
+        {            
+            CurrentGamePad.SetIndex(index);
+        }
+
         //Método de auxiliar para checar o estado dos botões e executar um comando
         //Recebo o botão do GamePad e a função do teclado a ser verificada
         private bool CheckButton(Buttons button, Predicate<Keys> function)
         {
+            if (Map == null)
+                return false;
+
             Keys? k = null;
             var dictionary = Map.GetKeyboardMap();
 
@@ -66,7 +87,6 @@ namespace Microsoft.Xna.Framework.Input
         }
 
         /// <summary>Verifica se o botão selecionado está pressionado.</summary>
-        /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool Hold(Buttons button)
         {
             if(CurrentGamePad.State.IsConnected)
@@ -81,7 +101,6 @@ namespace Microsoft.Xna.Framework.Input
         }
 
         /// <summary>Verifica se o botão selecionado estava liberado e foi pressionado.</summary>
-        /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool Pressed(Buttons button)
         {
             if (CurrentGamePad.State.IsConnected)
@@ -96,7 +115,6 @@ namespace Microsoft.Xna.Framework.Input
         }
 
         /// <summary>Verifica se o botão selecionado está liberado.</summary>     
-        /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool Released(Buttons button)
         {
             if (CurrentGamePad.State.IsConnected)

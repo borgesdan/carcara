@@ -1,25 +1,28 @@
 ﻿namespace Microsoft.Xna.Framework.Input
 {
-    public class CGamePadHelper : ICInput<Buttons>
+    public class CGamePad : ICInput<Buttons>
     {
+        PlayerIndex currentIndex = PlayerIndex.One;
+
         /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
         /// <summary>Obtém o estado atual do teclado.</summary>
         public GamePadState State { get; private set; }
         /// <summary>Obtém o estado anterior do teclado antes da atualização.</summary>
         public GamePadState OldState { get; private set; }
-        public PlayerIndex PlayerIndex { get; set; } = PlayerIndex.One;
+        /// <summary>Obtém ou define o index do jogador.</summary>
+        public PlayerIndex PlayerIndex { get => currentIndex; set => SetIndex(value); }
 
         /// <summary>
         /// Inicializa uma nova instância de CGamePadHelper.
         /// </summary>
-        public CGamePadHelper() { }
+        public CGamePad() { }
 
         /// <summary>
         /// Inicializa uma nova instância de CGamePadHelper.
         /// </summary>
         /// <param name="index">Define o index do jogador.</param>
-        public CGamePadHelper(PlayerIndex index) 
+        public CGamePad(PlayerIndex index) 
         {
             PlayerIndex = index;
         }
@@ -29,16 +32,17 @@
         /// </summary>
         /// <param name="state">O estado inicializado.</param>
         /// <param name="index">Define o index do jogador.</param>
-        public CGamePadHelper(GamePadState state, PlayerIndex index)
+        public CGamePad(GamePadState state, PlayerIndex index)
         {
             State = state;
+            PlayerIndex = index;
         }
 
         /// <summary>
         /// Inicializa uma nova instância da classe como cópia de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
-        public CGamePadHelper(CGamePadHelper source)
+        public CGamePad(CGamePad source)
         {
             IsEnabled = source.IsEnabled;
             State = source.State;
@@ -57,15 +61,22 @@
             }
         }
 
+        /// <summary>
+        /// Redefine o index do controle.
+        /// </summary>        
+        public void SetIndex(PlayerIndex index)
+        {
+            currentIndex = index;
+            State = GamePad.GetState(index);
+        }
+
         /// <summary>Verifica se o botão selecionado está pressionado.</summary>
-        /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool Hold(Buttons button)
         {
             return State.IsButtonDown(button);
         }
 
         /// <summary>Verifica se o botão selecionado estava liberado e foi pressionado.</summary>
-        /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool Pressed(Buttons button)
         {
             return OldState.IsButtonUp(button)
@@ -73,7 +84,6 @@
         }
 
         /// <summary>Verifica se o botão selecionado está liberado.</summary>     
-        /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool Released(Buttons button)
         {
             return State.IsButtonUp(button);

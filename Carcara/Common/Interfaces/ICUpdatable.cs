@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Microsoft.Xna.Framework
+﻿namespace Microsoft.Xna.Framework
 {
+    /// <summary>
+    /// Represents a updateble object.
+    /// </summary>
     public interface ICUpdatable
     {
+        /// <summary>
+        /// Update the game object.
+        /// </summary>
+        /// <param name="gameTime">Gets the game time state.</param>
         void Update(GameTime gameTime);
     }    
 }

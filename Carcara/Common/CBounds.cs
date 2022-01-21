@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.Xna.Framework
+﻿namespace Microsoft.Xna.Framework
 {
     public static class CBounds
     {
         /// <summary>
-        /// Calcula e define os limites de um objeto 2D ao informar sua posição, escala e origem.
+        /// Calcula e retorna os limites de um objeto 2D ao informar sua posição, escala e origem.
         /// </summary>
         /// <param name="transform">A transformação do objeto.</param>
         /// <param name="width">Informa o valor da largura do objeto.</param>
@@ -15,12 +11,25 @@ namespace Microsoft.Xna.Framework
         /// <param name="origin">Informa a origem para o cálculo.</param> 
         public static Rectangle Get(CTransform transform, int width, int height, Vector2 origin)
         {
+            return Get(transform.Position2, transform.Scale2, width, height, origin);
+        }
+
+        /// <summary>
+        /// Calcula e retorna os limites de um objeto 2D ao informar sua posição, escala e origem.
+        /// </summary>
+        /// <param name="position">A posição de tela do objeto de jogo.</param>
+        /// <param name="scale">A escala do objeto de jogo.</param>
+        /// <param name="width">Informa o valor da largura do objeto.</param>
+        /// <param name="height">Informa o valor da altura do objeto.</param>
+        /// <param name="origin">Informa a origem para o cálculo.</param> 
+        public static Rectangle Get(Vector2 position, Vector2 scale, int width, int height, Vector2 origin)
+        {
             //Posição
-            int x = (int)transform.X;
-            int y = (int)transform.Y;
+            int x = (int)position.X;
+            int y = (int)position.Y;
             //Escala
-            float sx = transform.Xs;
-            float sy = transform.Ys;
+            float sx = scale.X;
+            float sy = scale.Y;
             //Origem
             float ox = origin.X;
             float oy = origin.Y;

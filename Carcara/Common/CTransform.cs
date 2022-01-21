@@ -148,7 +148,7 @@ namespace Microsoft.Xna.Framework
     /// <summary>
     /// Fornece acesso as manipulações de transformação (posição, escala e rotação) através de uma estrutura.
     /// </summary>
-    public struct CTransformS : IEquatable<CTransformS>
+    public struct CTransformS
     {
         /// <summary>Obtém a posição no eixo X.</summary>
         public float X;
@@ -197,52 +197,6 @@ namespace Microsoft.Xna.Framework
             Xr = rotation.X;
             Yr = rotation.Y;
             Zr = rotation.Z;
-        }
-
-        ///<inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            if (obj is CTransformS t)
-                return Equals(t);
-
-            return false;
-        }
-
-        ///<inheritdoc/>
-        public bool Equals(CTransformS other)
-        {
-            return other.Position == Position
-                && other.Rotation == Rotation
-                && other.Scale == Scale;
-        }
-
-        ///<inheritdoc/>
-        public override int GetHashCode()
-        {
-            int hashCode = -2097520200;
-            hashCode = hashCode * -1521134295 + X.GetHashCode();
-            hashCode = hashCode * -1521134295 + Y.GetHashCode();
-            hashCode = hashCode * -1521134295 + Z.GetHashCode();
-            hashCode = hashCode * -1521134295 + Xs.GetHashCode();
-            hashCode = hashCode * -1521134295 + Ys.GetHashCode();
-            hashCode = hashCode * -1521134295 + Zs.GetHashCode();
-            hashCode = hashCode * -1521134295 + Xr.GetHashCode();
-            hashCode = hashCode * -1521134295 + Yr.GetHashCode();
-            hashCode = hashCode * -1521134295 + Zr.GetHashCode();
-            hashCode = hashCode * -1521134295 + Rotation.GetHashCode();
-            return hashCode;
-        }
-
-        ///<inheritdoc/>
-        public static bool operator ==(CTransformS left, CTransformS right)
-        {
-            return left.Equals(right);
-        }
-
-        ///<inheritdoc/>
-        public static bool operator !=(CTransformS left, CTransformS right)
-        {
-            return !(left == right);
-        }
+        }  
     }
 }

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.Xna.Framework.Graphics.Modifications
+namespace Microsoft.Xna.Framework.Graphics
 {
+    /// <summary>
+    /// Representa uma transição de uma cor para outra.
+    /// </summary>
     public class CColorTransition : ICUpdatable
     {
         private float elapsedTime = 0;

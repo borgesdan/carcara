@@ -35,7 +35,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="texture">A textura para desenho.</param>
         /// <param name="frames">Os recortes da textura (pode ser nulo).</param>
-        public CAnimationItem(Texture2D texture, Rectangle[] frames)
+        public CAnimationItem(Texture2D texture, params Rectangle[] frames)
         {
             Texture = texture;
             Frames = frames;

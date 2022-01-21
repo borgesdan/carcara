@@ -5,7 +5,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Classe que expõe métodos de gerenciamento de texturas.
 	/// </summary>
-	public static class TextureData
+	public static class CTextureData
 	{
         /// <summary>
         /// Obtém um objeto Texture2D preechido com uma cor definida.

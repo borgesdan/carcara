@@ -1,12 +1,12 @@
 ﻿namespace Microsoft.Xna.Framework
 {
     /// <summary>
-    /// Representa um objeto que expõe os seus limites na tela.
+    /// Represents an object that exposes its boundaries on the screen.
     /// </summary>
     public interface ICBoundsable
     {
         /// <summary>
-        /// Obtém os limites de tela do objeto.
+        /// Gets the object's screen bounds.
         /// </summary>
         Rectangle Bounds { get; }
     }

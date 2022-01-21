@@ -9,9 +9,9 @@ namespace Microsoft.Xna.Framework
     /// <summary>
     /// Representa um forma ligada por dois ou mais vertices.
     /// </summary>
-    public class CPolyForm : IEquatable<CPolyForm>
+    public class CPoly : IEquatable<CPoly>
     {
-        private static CPolyForm recPoly = null;
+        private static CPoly recPoly = null;
 
         //vertices
         private Vector2[] points = null;
@@ -51,7 +51,7 @@ namespace Microsoft.Xna.Framework
         /// Inicializa uma nova instância da classe
         /// </summary>
         /// <param name="verticesCount">Inicializa o polígono vazio mas com uma quantidade limite de vertices.</param>
-        public CPolyForm(int verticesCount)
+        public CPoly(int verticesCount)
         {
             if (verticesCount < 2)
                 throw new ArgumentException($"{nameof(verticesCount)} must be greater than or equals to 2.");
@@ -65,7 +65,7 @@ namespace Microsoft.Xna.Framework
         /// Inicializa uma nova instância da classe.
         /// </summary>
         /// <param name="vertices">Os vertices do polígono.</param>
-        public CPolyForm(params Vector2[] vertices)
+        public CPoly(params Vector2[] vertices)
         {
             if (vertices.Length < 2)
                 throw new ArgumentException($"{nameof(vertices)} must be greater than or equals to 2.");
@@ -79,7 +79,7 @@ namespace Microsoft.Xna.Framework
         /// Inicializa uma nova instância como cópia de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
-        public CPolyForm(CPolyForm source)
+        public CPoly(CPoly source)
         {
             Array.Copy(source.points, this.points, source.points.Length);
             Array.Copy(source.edges, this.edges, source.edges.Length);
@@ -127,9 +127,10 @@ namespace Microsoft.Xna.Framework
         /// Aplica o deslocamento das posições dos pontos do polígono.
         /// </summary>
         /// <param name="vector">O valor no eixo X e Y.</param>
-        public void Offset(Vector2 vector)
+        public CPoly Offset(Vector2 vector)
         {
             Offset(vector.X, vector.Y);
+            return this;
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="x">O valor no eixo X.</param>
         /// <param name="y">O valor no eixo Y.</param>
-        public void Offset(float x, float y)
+        public CPoly Offset(float x, float y)
         {
             for (int i = 0; i < points.Length; i++)
             {
@@ -146,13 +147,15 @@ namespace Microsoft.Xna.Framework
             }
 
             needBuildEdges = true;
+
+            return this;
         }
 
         /// <summary>
         /// Define os pontos do polígono.
         /// </summary>
         /// <param name="vertices">Define os pontos através de uma lista de pontos.</param>
-        public void Set(params Vector2[] vertices)
+        public CPoly Set(params Vector2[] vertices)
         {
             if (vertices.Length < 2)
                 throw new ArgumentException($"{nameof(vertices)} must be greater than or equals to 2.");
@@ -166,6 +169,8 @@ namespace Microsoft.Xna.Framework
             Array.Copy(vertices, points, points.Length);
 
             needBuildEdges = true;
+
+            return this;
         }
 
         /// <summary>
@@ -199,7 +204,7 @@ namespace Microsoft.Xna.Framework
             return _e;
         }
 
-        public bool Intersect(CPolyForm other)
+        public bool Intersect(CPoly other)
         {
             return Intersects(this, other);
         }
@@ -213,14 +218,14 @@ namespace Microsoft.Xna.Framework
             }
 
             if (recPoly == null)
-                recPoly = new CPolyForm(new Vector2[4]);
+                recPoly = new CPoly(new Vector2[4]);
 
             rectangle.ToPolygon(recPoly);
 
             return Intersects(this, recPoly);
         }        
 
-        public bool Equals(CPolyForm other)
+        public bool Equals(CPoly other)
         {
             if (other.points.Length != this.points.Length)
                 return false;
@@ -239,7 +244,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="polygonA">O primeiro polígono.</param>
         /// <param name="polygonB">O segundo polígono.</param>     
-        public static bool Intersects(CPolyForm polygonA, CPolyForm polygonB)
+        public static bool Intersects(CPoly polygonA, CPoly polygonB)
         {
             if (polygonA.IsEmpty || polygonB.IsEmpty)
                 return false;
@@ -343,7 +348,7 @@ namespace Microsoft.Xna.Framework
         }
 
         // Calculate the projection of a polygon on an axis and returns it as a [min, max] interval
-        private static void ProjectPolygon(Vector2 axis, CPolyForm polygon, ref float min, ref float max)
+        private static void ProjectPolygon(Vector2 axis, CPoly polygon, ref float min, ref float max)
         {
             // To project a point on an axis use the dot product            
             float d = Vector2.Dot(axis, polygon.points[0]);

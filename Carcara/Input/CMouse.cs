@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.Xna.Framework.Input
 {
     /// <summary>Classe que auxilia no gerenciamento de entradas do mouse.</summary>
-    public class CMouseHelper : ICInput<MouseButtons>
+    public class CMouse : ICInput<MouseButtons>
     {
         /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
@@ -13,14 +13,14 @@
         public CMouseEvents MouseEvents { get; private set; } = new CMouseEvents();
 
         /// <summary>Inicializa uma nova instância da classe MouseHelper.</summary>
-        public CMouseHelper()
+        public CMouse()
         {
             State = Mouse.GetState();
         }
 
         /// <summary>Inicializa uma nova instância da classe MouseHelper.</summary>
         /// <param name="state">O estado definido do mouse.</param>
-        public CMouseHelper(MouseState state)
+        public CMouse(MouseState state)
         {
             State = state;
         }
@@ -29,7 +29,7 @@
         /// Inializa uma nova instância da classe como cópia de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
-        public CMouseHelper(CMouseHelper source)
+        public CMouse(CMouse source)
         {
             IsEnabled = source.IsEnabled;
             State = source.State;
@@ -51,21 +51,18 @@
         }        
 
         /// <summary>Checa se o botão do mouse está pressionado.</summary>
-        /// <param name="button">O botão do mouse a ser checado.</param>
         public bool Hold(MouseButtons button)
         {            
              return Check(button, State) == ButtonState.Pressed;
         }
 
         /// <summary>Checa se o botão do mouse está liberado.</summary>
-        /// <param name="button">O botão do mouse a ser checado.</param>
         public bool Released(MouseButtons button)
         {            
             return Check(button, State) == ButtonState.Released;
         }
 
         /// <summary>Checa se o botão do mouse foi pressionado.</summary>
-        /// <param name="button">O botão do mouse a ser checado.</param>
         public bool Pressed(MouseButtons button)
         {
             return Check(button, OldState) == ButtonState.Released
