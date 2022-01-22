@@ -5,24 +5,20 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa uma animação 2D que armazena texturas e recortes.
     /// </summary>
-    public class CAnimation : ICTransformable, ICDrawTransformable, ICUpdatable
+    public class CAnimation : ICTransformable, ICDrawTransformable, ICUpdatable, ICDrawable
     {
         double elapsedTime = 0;
-
-        /// <summary>
-        /// Obtém ou define a quantidade de itens a serem utilizados na animação.
-        /// Um item pode receber uma textura e recortes, que representam um quadro a ser exibido.
-        /// </summary>
-        public CAnimationItem[] Items { get; set; }
+        float time;
+        CAnimationItem[] items;
 
         /// <summary>Obtém ou define o tempo de exibição de cada item.</summary>
-        public float Time { get; set; }
+        public float Time { get => time; set => time = MathHelper.Clamp(value, 0, float.MaxValue); }
 
         /// <summary>Obtém ou define se animação se repetirá quando chegar ao fim.</summary>
         public bool IsLooping { get; set; } = true;
 
         /// <summary>Obtém o item a ser utilizado no momento.</summary>
-        public CAnimationItem CurrentItem { get => Items[CurrentItemIndex]; }
+        public CAnimationItem CurrentItem { get => items[CurrentItemIndex]; }
         
         /// <summary>Obtém o recorte a ser utilizado no momento.</summary>
         public Rectangle CurrentFrame 
@@ -41,7 +37,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Obtém o index do recorte do item atual.</summary>
         public int CurrentFrameIndex { get; private set; } = 0;
-        /// <summary>Obtém o index atual de acesso ao vetor <see cref="Items"/>.</summary>
+        /// <summary>Obtém o index atual de acesso ao vetor <see cref="items"/>.</summary>
         public int CurrentItemIndex { get; private set; } = 0;
         
         /// <summary>Obtém se a animação finalizou após o termino do método de atualização.</summary>
@@ -67,7 +63,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="items">Define a quantidade de itens a serem utilizados na animação.</param>
         public CAnimation(float time, bool isLooping, params CAnimationItem[] items)
         {
-            Items = items;
+            this.items = items;
             Time = time;
             IsLooping = isLooping;
         }
@@ -80,11 +76,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="textures">Define as texturas que serão convertidas em items.</param>
         public CAnimation(float time, bool isLooping, params Texture2D[] textures)
         {
-            Items = new CAnimationItem[textures.Length];
+            items = new CAnimationItem[textures.Length];
 
             for(int i = 0; i < textures.Length; i++)
             {
-                Items[i] = new CAnimationItem(textures[i], null);
+                items[i] = new CAnimationItem(textures[i], null);
             }
 
             Time = time;
@@ -106,11 +102,11 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Transform = new CTransform(source.Transform);
             this.elapsedTime = source.elapsedTime;
             
-            this.Items = new CAnimationItem[source.Items.Length];
+            this.items = new CAnimationItem[source.items.Length];
 
-            for (int i = 0; i < source.Items.Length; i++)
+            for (int i = 0; i < source.items.Length; i++)
             {
-                Items[i] = new CAnimationItem(source.Items[i]);
+                items[i] = new CAnimationItem(source.items[i]);
             }
 
             this.Finished = source.Finished;
@@ -120,8 +116,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public CAnimationItem this[int index]
         {
-            get => Items[index];
-            set => Items[index] = value;
+            get => items[index];
+            set => items[index] = value;
         }
 
         /// <summary>
@@ -130,7 +126,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Obtém acesso aos tempos de jogo.</param>
         public void Update(GameTime gameTime)
         {
-            if (Items == null)
+            if (items == null)
                 return;
 
             IsFinished = false;
@@ -141,34 +137,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if(elapsedTime > Time)
             {
-                elapsedTime = 0;        
-
-                if(CurrentFrameIndex < CurrentItem.FrameCount - 1)
-                {
-                    CurrentFrameIndex++;
-                }
-                else
-                {
-                    CurrentItemIndex++;
-
-                    if (CurrentItemIndex > Items.Length - 1)
-                    {
-                        if (IsLooping)
-                        {
-                            CurrentFrameIndex = 0;
-                            CurrentItemIndex = 0;
-                        }
-                        else
-                        {
-                            CurrentItemIndex--;
-                            CurrentFrameIndex = CurrentItem.FrameCount - 1;
-                            CurrentItemIndex = Items.Length - 1;
-                        }
-
-                        Finished?.Invoke(CurrentItem);
-                        IsFinished = true;
-                    }
-                }
+                elapsedTime = 0;
+                UpdateAnimation();
             }
 
             if (fIndex != CurrentFrameIndex)
@@ -177,13 +147,43 @@ namespace Microsoft.Xna.Framework.Graphics
                 ItemChanged?.Invoke(CurrentItem);
         }
 
+        void UpdateAnimation()
+        {
+            if (CurrentFrameIndex < CurrentItem.FrameCount - 1)
+            {
+                CurrentFrameIndex++;
+            }
+            else
+            {
+                CurrentItemIndex++;
+
+                if (CurrentItemIndex > items.Length - 1)
+                {
+                    if (IsLooping)
+                    {
+                        CurrentFrameIndex = 0;
+                        CurrentItemIndex = 0;
+                    }
+                    else
+                    {
+                        CurrentItemIndex--;
+                        CurrentFrameIndex = CurrentItem.FrameCount - 1;
+                        CurrentItemIndex = items.Length - 1;
+                    }
+
+                    Finished?.Invoke(CurrentItem);
+                    IsFinished = true;
+                }
+            }
+        }
+
         /// <summary>
         /// Método de desenho.
         /// </summary>
         /// <param name="spriteBatch">Obtém acesso ao objeto SpriteBatch corrente.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (Items == null && CurrentItem.Texture == null)
+            if (items == null && CurrentItem.Texture == null)
                 return;
             
             CDrawArgs args = new CDrawArgs(Transform, DrawTransform);            
@@ -209,7 +209,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public void SetItems(CAnimationItem[] items)
         {
-            Items = items;
+            this.items = items;
         }
     }
 }
