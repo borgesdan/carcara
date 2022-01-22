@@ -29,7 +29,7 @@
   Prefixo C
 </h2>
 <p>
-  As classes e estruturas desta biblioteca tem o seu nome iniciado com a letra 'c' maiúscula (C), assim, temos CPoly, CCicle, CHitbox, entre outras. Essa nomeclatura é utilizada para não conflitar com outras classes que, porventura, poderão ser adicionadas em seu projeto. Esta biblioteca compartilha o namespace padrão <code>Microsoft.Xna.Framework</code> para facilitar no desenvolvimento.
+  As classes e estruturas desta biblioteca tem o seu nome iniciado com a letra 'c' maiúscula (C), assim, temos CPoly, CCicle, CHitbox, entre outras. Essa nomeclatura é utilizada para não conflitar com outras classes que, por ventura, poderão ser adicionadas em seu projeto. Esta biblioteca compartilha o namespace padrão <code>Microsoft.Xna.Framework</code> para facilitar no desenvolvimento.
 </p>
 
 <h2>
