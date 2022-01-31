@@ -43,6 +43,18 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém se a animação finalizou após o termino do método de atualização.</summary>
         public bool IsFinished { get; private set; }
 
+        /// <summary>Obtém os limites de tela da animação.</summary>
+        public Rectangle Bounds
+        {
+            get
+            {
+                if (CurrentItem == null)
+                    return Rectangle.Empty;
+
+                return CBounds.Get(Transform, CurrentFrame.Width, CurrentFrame.Height, DrawTransform.Origin);
+            }
+        }
+
         /// <summary>Obtém ou define as propriedades de transformações.</summary>
         public CTransform Transform { get; set; } = new CTransform();
         /// <summary>Obtém ou define as propriedades de transformações para desenho.</summary>
@@ -63,7 +75,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="items">Define a quantidade de itens a serem utilizados na animação.</param>
         public CAnimation(float time, bool isLooping, params CAnimationItem[] items)
         {
-            this.items = items;
+            Array.Copy(items, this.items, items.Length);
             Time = time;
             IsLooping = isLooping;
         }
@@ -103,11 +115,7 @@ namespace Microsoft.Xna.Framework.Graphics
             this.elapsedTime = source.elapsedTime;
             
             this.items = new CAnimationItem[source.items.Length];
-
-            for (int i = 0; i < source.items.Length; i++)
-            {
-                items[i] = new CAnimationItem(source.items[i]);
-            }
+            Array.Copy(source.items, this.items, source.items.Length);            
 
             this.Finished = source.Finished;
             this.FrameChanged = source.FrameChanged;
@@ -123,7 +131,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Método de atualização.
         /// </summary>
-        /// <param name="gameTime">Obtém acesso aos tempos de jogo.</param>
         public void Update(GameTime gameTime)
         {
             if (items == null)
@@ -180,7 +187,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Método de desenho.
         /// </summary>
-        /// <param name="spriteBatch">Obtém acesso ao objeto SpriteBatch corrente.</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (items == null && CurrentItem.Texture == null)
@@ -202,14 +208,6 @@ namespace Microsoft.Xna.Framework.Graphics
             CurrentFrameIndex = 0;
             CurrentItemIndex = 0;
             IsFinished = false;
-        }
-
-        /// <summary>
-        /// Redefine os items da animação.
-        /// </summary>
-        public void SetItems(CAnimationItem[] items)
-        {
-            this.items = items;
         }
     }
 }

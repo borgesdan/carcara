@@ -6,7 +6,7 @@ namespace Microsoft.Xna.Framework.Input
     /// Representa um tipo de entrada do usuário.
     /// </summary>
     /// <typeparam name="T">T é uma enumeração Button, MouseButtons, Keys</typeparam>
-    public interface ICInput<T> where T : Enum
+    public interface ICInput<T>
     {
         /// <summary>Atualiza os estados da entrada.</summary>
         /// <param name="gameTime">Obtém os tempos de jogo.</param>

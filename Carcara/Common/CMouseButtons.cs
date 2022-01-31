@@ -5,10 +5,10 @@ namespace Microsoft.Xna.Framework
     /// <summary>Enumera os botões do mouse.</summary>
     public enum MouseButtons : byte
     {
-        Left = 2,
-        Right = 4,
-        Middle = 8,
-        X1 = 16,
-        X2 = 32
+        Left = 1,
+        Right = 2,
+        Middle = 4,
+        X1 = 8,
+        X2 = 16
     }
 }
