@@ -17,7 +17,8 @@ namespace Microsoft.Xna.Framework
         private Vector2[] points = null;
         //arestas
         private Vector2[] edges = null;
-        private bool needBuildEdges = false;        
+        private bool needBuildEdges = false;
+        private bool isEmpty = false;
 
         /// <summary>
         /// Obtém o centro do polígono.
@@ -44,7 +45,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         public bool IsEmpty
         {
-            get => points == null || points.Length == 0;
+            get => isEmpty;
         }        
 
         /// <summary>
@@ -54,9 +55,11 @@ namespace Microsoft.Xna.Framework
         public CPoly(int verticesCount)
         {
             if (verticesCount < 2)
-                throw new ArgumentException($"{nameof(verticesCount)} must be greater than or equals to 2.");
+                throw new ArgumentException($"{nameof(verticesCount)} must be greater than or equals to 2.");      
 
             points = new Vector2[verticesCount];
+            points.Initialize();
+            isEmpty = true;
             edges = new Vector2[points.Length];
             //needBuildEdges = true;
         }
@@ -67,8 +70,12 @@ namespace Microsoft.Xna.Framework
         /// <param name="vertices">Os vertices do polígono.</param>
         public CPoly(params Vector2[] vertices)
         {
-            if (vertices.Length < 2)
-                throw new ArgumentException($"{nameof(vertices)} must be greater than or equals to 2.");
+            //if (vertices == null)
+            //    throw new ArgumentNullException(nameof(vertices));
+
+            //if (vertices.Length < 2)
+            //    throw new ArgumentException($"{nameof(vertices)} must be greater than or equals to 2.");
+            CheckIsValidArray(vertices);
 
             points = vertices;
             edges = new Vector2[points.Length];
@@ -84,6 +91,15 @@ namespace Microsoft.Xna.Framework
             Array.Copy(source.points, this.points, source.points.Length);
             Array.Copy(source.edges, this.edges, source.edges.Length);
             this.needBuildEdges = source.needBuildEdges;
+        }
+
+        void CheckIsValidArray(Vector2[] vertices)
+        {
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+
+            if (vertices.Length < 2)
+                throw new ArgumentException($"{nameof(vertices)} must be greater than or equals to 2.");
         }
         
         /// <summary>
@@ -157,8 +173,12 @@ namespace Microsoft.Xna.Framework
         /// <param name="vertices">Define os pontos através de uma lista de pontos.</param>
         public CPoly Set(params Vector2[] vertices)
         {
-            if (vertices.Length < 2)
-                throw new ArgumentException($"{nameof(vertices)} must be greater than or equals to 2.");
+            //if(vertices == null)
+            //    throw new ArgumentNullException(nameof(vertices));
+
+            //if (vertices.Length < 2)
+            //    throw new ArgumentException($"{nameof(vertices)} must be greater than or equals to 2.");
+            CheckIsValidArray(vertices);
 
             if (points == null || (points.Length != vertices.Length))
             {
@@ -169,6 +189,7 @@ namespace Microsoft.Xna.Framework
             Array.Copy(vertices, points, points.Length);
 
             needBuildEdges = true;
+            isEmpty = false;
 
             return this;
         }
@@ -183,7 +204,7 @@ namespace Microsoft.Xna.Framework
 
             Vector2[] _p = new Vector2[points.Length];
             Array.Copy(points, _p, points.Length);
-
+            
             return _p;
         }
 
@@ -211,6 +232,9 @@ namespace Microsoft.Xna.Framework
 
         public bool Intersect(Rectangle rectangle)
         {
+            if (rectangle.IsEmpty)
+                return false;
+
             foreach(Vector2 p in points)
             {
                 if (rectangle.Contains(p))

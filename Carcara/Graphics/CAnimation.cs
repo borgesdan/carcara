@@ -75,7 +75,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="items">Define a quantidade de itens a serem utilizados na animação.</param>
         public CAnimation(float time, bool isLooping, params CAnimationItem[] items)
         {
-            Array.Copy(items, this.items, items.Length);
+            this.items = items;
             Time = time;
             IsLooping = isLooping;
         }
@@ -113,10 +113,7 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Time = source.Time;
             this.Transform = new CTransform(source.Transform);
             this.elapsedTime = source.elapsedTime;
-            
-            this.items = new CAnimationItem[source.items.Length];
-            Array.Copy(source.items, this.items, source.items.Length);            
-
+            this.items = source.items;
             this.Finished = source.Finished;
             this.FrameChanged = source.FrameChanged;
             this.ItemChanged = source.ItemChanged;

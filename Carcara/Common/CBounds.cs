@@ -1,5 +1,8 @@
 ﻿namespace Microsoft.Xna.Framework
 {
+    /// <summary>
+    /// Fornece acesso a métodos para cálculo dos limites de tela de um objeto de jogo.
+    /// </summary>
     public static class CBounds
     {
         /// <summary>
@@ -12,6 +15,18 @@
         public static Rectangle Get(CTransform transform, int width, int height, Vector2 origin)
         {
             return Get(transform.Position2, transform.Scale2, width, height, origin);
+        }
+
+        /// <summary>
+        /// Calcula e retorna os limites de um objeto 2D ao informar sua posição, escala e origem.
+        /// </summary>
+        /// <param name="transform">A transformação do objeto.</param>
+        /// <param name="width">Informa o valor da largura do objeto.</param>
+        /// <param name="height">Informa o valor da altura do objeto.</param>
+        /// <param name="origin">Informa a origem para o cálculo.</param> 
+        public static Rectangle Get(CTransformS transform, int width, int height, Vector2 origin)
+        {
+            return Get(transform.Position.ToVector2(), transform.Scale.ToVector2(), width, height, origin); ;
         }
 
         /// <summary>

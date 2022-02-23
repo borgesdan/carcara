@@ -4,32 +4,28 @@ using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework
 {
-    public enum ScreenAction : byte
-    {
-        None,
-        Reset,
-        Load,
-        Unload,
-    }
+    /// <summary>
+    /// Representa um gerenciador de telas.
+    /// </summary>
+    public class CScreenManager : CScreenManager<CScreen> { }
 
     /// <summary>
-    /// Representa um gerenciador de telas do jogo.
+    /// Representa um gerenciador de telas.
     /// </summary>
-    public static class CScreenManager
+    public class CScreenManager<T> where T : ICScreen
     {
-        static bool isChanged = false;
-        static CScreen standbyScreen = null;
-        
-        /// <summary>Obtém ou define a lista de telas.</summary>
-        public static List<CScreen> Screens { get; set; } = new List<CScreen>();        
+        bool isChanged = false;
+         T standbyScreen = default;
+         readonly List<T> screens = new List<T>();
+
         /// <summary>Obtém a tela ativa.</summary>
-        public static CScreen CurrentScreen { get; private set; } = null;               
+        public  T CurrentScreen { get; private set; } = default;
 
         /// <summary>
         /// Atualiza o gerenciador de tela.
         /// </summary>
         /// <param name="gameTime">Obtém acesso aos tempos de jogo.</param>
-        public static void Update(GameTime gameTime)
+        public  void Update(GameTime gameTime)
         {
             CurrentScreen?.Update(gameTime);
 
@@ -37,8 +33,8 @@ namespace Microsoft.Xna.Framework
             {
                 CurrentScreen = standbyScreen;
                 isChanged = false;
-                standbyScreen = null;
-            }            
+                standbyScreen = default;
+            }
         }
 
         /// <summary>
@@ -46,45 +42,45 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="gameTime">Obtém acesso aos tempos de jogo.</param>
         /// <param name="spriteBatch">O objeto SpriteBatch para desenho.</param>
-        public static void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public  void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             CurrentScreen?.Draw(gameTime, spriteBatch);
-        }                    
+        }
 
         /// <summary>Adiciona telas para esse gerenciador.</summary>
         /// <param name="screenList">A quantidade desejada de telas a serem adicionadas.</param>
-        public static void Add(params CScreen[] screenList)
+        public  void Add(params T[] screenList)
         {
-            Screens.AddRange(screenList);
+            screens.AddRange(screenList);
 
             if (CurrentScreen == null)
             {
-                CurrentScreen = Screens[0];
-            }            
+                CurrentScreen = screens[0];
+            }
         }
 
-        private static void ApplyAction(ScreenAction action, CScreen screen)
+        private  void ApplyAction(CScreenAction action, T screen)
         {
-            switch(action)
+            switch (action)
             {
-                case ScreenAction.Load:
+                case CScreenAction.Load:
                     screen.Load();
                     break;
-                case ScreenAction.Unload:
+                case CScreenAction.Unload:
                     screen.Unload();
                     break;
-                case ScreenAction.Reset:
+                case CScreenAction.Reset:
                     screen.Reset();
-                    break;                
+                    break;
             }
         }
 
         /// <summary>Remove uma tela do gerenciador. Retorna true caso sucesso.</summary>
         /// <param name="name">Nome da tela.</param>
-        public static bool Remove(string name)
+        public  bool Remove(string name)
         {
-            CScreen finder = Find(name);
-            return Screens.Remove(finder);
+            T finder = Find(name);
+            return screens.Remove(finder);
         }
 
         /// <summary>
@@ -92,10 +88,10 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         /// <param name="index">O index da tela pela ordem de adição.</param>
         /// <param name="action">Define a ação a ser executada na tela anterior após a sua troca.</param>
-        public static void Change(int index, ScreenAction action)
+        public  void Change(int index, CScreenAction action)
         {
-            CScreen old = CurrentScreen;
-            CScreen finder = Screens[index];
+            T old = CurrentScreen;
+            T finder = screens[index];
 
             isChanged = true;
             standbyScreen = finder;
@@ -106,64 +102,64 @@ namespace Microsoft.Xna.Framework
         /// <summary>Troca a tela tiva para a tela selecionada.</summary>
         /// <param name="name">O nome da tela que será ativada.</param>
         /// <param name="action">Define a ação a ser executada com a tela anterior após a sua troca.</param>
-        public static void Change(string name, ScreenAction action)
+        public  void Change(string name, CScreenAction action)
         {
-            int index = Screens.FindIndex(s => s.Name.Equals(name));
+            int index = screens.FindIndex(s => s.Name.Equals(name));
 
             if (index != -1)
                 Change(index, action);
             else
-                throw new NullReferenceException($"The screen {name} doesn't exist.");
+                throw new NullReferenceException($"The screen {name} doesn'T exist.");
         }
 
         /// <summary>
         /// Troca para tela posterior a atual.
         /// </summary>
         /// <param name="action">Define a ação a ser executada com a tela anterior após a sua troca.</param>
-        public static void Next(ScreenAction action)
+        public  void Next(CScreenAction action)
         {
-            int index = Screens.FindIndex(x => x.Equals(CurrentScreen));
+            int index = screens.FindIndex(x => x.Equals(CurrentScreen));
 
-            if (index >= Screens.Count - 1)
+            if (index >= screens.Count - 1)
                 index = 0;
             else
                 index++;
 
-            Change(Screens[index].Name, action);
+            Change(screens[index].Name, action);
         }
 
         /// <summary>
         /// Troca para a tela anterior a atual.
         /// </summary>
         /// <param name="action">Define a ação a ser executada com a tela anterior após a sua troca.</param>
-        public static void Back(ScreenAction action)
+        public  void Back(CScreenAction action)
         {
-            int index = Screens.FindIndex(x => x.Equals(CurrentScreen));
+            int index = screens.FindIndex(x => x.Equals(CurrentScreen));
 
             if (index <= 0)
-                index = Screens.Count - 1;
+                index = screens.Count - 1;
             else
                 index--;
 
-            Change(Screens[index].Name, action);
+            Change(screens[index].Name, action);
         }
 
         /// <summary>Busca e retorna uma tela definida pelo nome.</summary>
         /// <param name="name">O nome da tela.</param>
-        public static CScreen Find(string name)
+        public  T Find(string name)
         {
-            var s = Screens.Find(x => x.Name.Equals(name));
+            var s = screens.Find(x => x.Name.Equals(name));
             if (s != null)
                 return s;
             else
-                throw new NullReferenceException($"The screen {name} doesn't exist.");
+                throw new NullReferenceException($"The screen {name} doesn'T exist.");
         }
 
         /// <summary>
         /// Define uma tela a ser carregada ao seu estado inicial.
         /// </summary>
         /// <param name="name">O nome da tela a ser redefinida.</param>
-        public static void Reset(string name)
+        public  void Reset(string name)
         {
             Find(name).Reset();
         }
@@ -172,16 +168,16 @@ namespace Microsoft.Xna.Framework
         /// Chama o método Load() de uma determinada tela.
         /// </summary>
         /// <param name="index">O index no array de telas.</param>
-        public static void Load(int index)
+        public  void Load(int index)
         {
-            Screens[index].Load();
+            screens[index].Load();
         }
 
         /// <summary>
         /// Chama o método Load() de uma determinada tela.
         /// </summary>
         /// <param name="name">O nome da tela.</param>
-        public static void Load(string name)
+        public  void Load(string name)
         {
             Find(name).Load();
         }
@@ -190,18 +186,18 @@ namespace Microsoft.Xna.Framework
         /// Chama o método Unload() de uma determinada tela.
         /// </summary>
         /// <param name="index">O index no array de telas.</param>
-        public static void Unload(int index)
+        public  void Unload(int index)
         {
-            Screens[index].Unload();
+            screens[index].Unload();
         }
 
         /// <summary>
         /// Chama o método Unload() de uma determinada tela.
         /// </summary>
         /// <param name="name">O nome da tela.</param>
-        public static void Unload(string name)
+        public  void Unload(string name)
         {
             Find(name).Unload();
-        }       
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Microsoft.Xna.Framework
     /// <summary>
     /// Representa uma tela base de jogo.
     /// </summary>
-    public class CScreen : IDisposable
+    public class CScreen : ICScreen, IDisposable
     {
         /// <summary>Obtém a classe Game do jogo.</summary>
         protected Game Game { get; }
@@ -16,7 +16,7 @@ namespace Microsoft.Xna.Framework
         /// <summary>Obtém acesso aos conteúdos do jogo.</summary>
         protected ContentManager Content { get => Game.Content; }
         /// <summary>Obtém ou define o nome da tela.</summary>
-        public string Name { get; }
+        public string Name { get; protected set; }
         /// <summary>Obtém ou define se a tela está habilitada a sofrer atualizações.</summary>
         public bool IsEnabled { get; set; } = true;
         /// <summary>Obtém ou define se a tela está habilitada a ser desenhada na tela.</summary>
@@ -28,7 +28,7 @@ namespace Microsoft.Xna.Framework
         public CScreen(Game game, string name = "")
         {
             Game = game;
-            Name = name;
+            Name = name;                        
         }
 
         /// <summary>

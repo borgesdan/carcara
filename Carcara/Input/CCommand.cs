@@ -1,10 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 
 namespace Microsoft.Xna.Framework.Input
 {
+    //Exemplo de comando
+    /*
+     * CCommand command = new CCommand(3.0F, 
+     *                          () => { Window.Title = "Result text"},
+     *                          (args) => { return keyboards.Press(Keys.A)},
+     *                          (args) => { return keyboards.Press(Keys.S)},
+     *                          (args) => { return keyboards.Press(Keys.D)},
+     */
+
+
     /// <summary>
     /// Representa um comando personalizável com um tempo de execução, os eventos de validação e o evento resultante caso as validações sejam satisfatórias.
     /// </summary>

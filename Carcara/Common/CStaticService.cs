@@ -6,26 +6,30 @@ namespace Microsoft.Xna.Framework
     /// <summary>
     /// Classe estática que armazena instâncias de classes para reutilização posterior.
     /// </summary>
-    public static class CGameService
+    public static class CStaticService
     {
-        static Dictionary<Type, object> services = new Dictionary<Type, object>();
+        static readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         /// <summary>
-        /// Adiciona uma nova instância ao serviço.
+        /// Adiciona um tipo ao serviço. Um tipo existente será sobrescrevido.
         /// </summary>
-        /// <param name="provider">A instância de uma classe a ser adicionada.</param>
         public static void Add<T>(T provider) where T : class
         {
             Type type = typeof(T);
 
+            if(provider == null)
+                throw new ArgumentException($"{provider} cannot be null.");
+
             if (services.ContainsKey(type))
-                throw new ArgumentException($"{provider}: A key with that specific type of class already exists.");
+            {
+                services[type] = provider;
+            }
 
             services.Add(type, provider);
         }
 
         /// <summary>
-        /// Remove uma determinada instância da lista determinada por seu tipo.
+        /// Remove uma instância da lista.. Retorna true caso sucesso.
         /// </summary>
         public static bool Remove<T>() where T : class
         {
@@ -37,13 +41,19 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         public static T Get<T>() where T : class
         {
-            if(services.ContainsKey(typeof(T)))
-            {
-                object obj = services[typeof(T)];
-                return (T)obj;
-            }
+            Type t = typeof(T);
+            return services.ContainsKey(t) ? (T)services[t] : null;
+        }
 
-            return null;
+        /// <summary>
+        /// Obtém uma instância da lista ao informar o seu tipo e a remove em seguida.
+        /// </summary>
+        public static T GetAndRemove<T>() where T : class         
+        {
+            T obj = Get<T>();
+            Remove<T>();
+
+            return obj;
         }
 
         /// <summary>

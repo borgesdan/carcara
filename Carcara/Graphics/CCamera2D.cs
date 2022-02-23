@@ -31,38 +31,35 @@
         public Matrix TransformMatrix => transformMatrix;
 
         /// <summary>Obtém ou define a posição da câmera.</summary>
-        public Vector2 Position
-        {
-            get => position;
-            set
-            {
-                SetPosition(value);
-            }
+        public Vector2 Position { get => position; set => SetPosition(value);
         }
         /// <summary>Obtém ou define a posição no eixo X da câmera.</summary>
-        public float X
-        {
-            get => Position.X;
-            set
-            {
-                SetPosition(new Vector2(value, position.Y));
-            }
-        }
+        public float X { get => Position.X; set => SetPosition(new Vector2(value, position.Y)); }
+        
         /// <summary>Obtém ou define a posição no eixo Y da câmera.</summary>
-        public float Y
-        {
-            get => Position.Y;
-            set
-            {
-                SetPosition(new Vector2(position.X, value));
-            }
-        }
+        public float Y { get => Position.Y; set => SetPosition(new Vector2(position.X, value)); }
 
         /// <summary>
         /// Inicializa uma nova instâcia da classe.
         /// </summary>
-        public CCamera2D()
+        public CCamera2D() { }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe.
+        /// </summary>
+        public CCamera2D(Vector2 position)
         {
+            Position = position;
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe.
+        /// </summary>
+        public CCamera2D(Vector2 position, float zoom, float rotation)
+        {
+            Position = position;
+            this.zoom = zoom;
+            this.rotation = rotation;
         }
 
         /// <summary>

@@ -10,4 +10,12 @@
         /// </summary>
         CTransform Transform { get; set; }
     }
+
+    public interface ICTransformableS
+    {
+        /// <summary>
+        /// Gets or sets the game object transform.
+        /// </summary>
+        CTransformS Transform { get; set; }
+    }
 }

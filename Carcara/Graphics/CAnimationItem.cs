@@ -42,6 +42,18 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
+        /// Inicializa uma nova instância da classe.
+        /// </summary>
+        /// <param name="game">Informa a classe Game principal do jogo.</param>
+        /// <param name="path">Informa o caminho da textura a ser utilizada.</param>
+        /// <param name="frames">Informa os recortes da textura (pode ser nulo).</param>
+        public CAnimationItem(Game game, string path, params Rectangle[] frames)
+        {
+            Texture = game.Content.Load<Texture2D>(path);
+            Frames = frames;
+        }
+
+        /// <summary>
         /// Inicializa uma nova instância da classe como cópia de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
