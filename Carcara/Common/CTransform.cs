@@ -8,8 +8,26 @@ namespace Microsoft.Xna.Framework
     /// </summary>
     public class CTransform : IEquatable<CTransform>
     {
+
+        private Vector3 _oldPosition = Vector3.Zero;
+        private Vector3 _oldScale = Vector3.One;
+        private Vector3 _oldRotation = Vector3.Zero;
+
+        private Vector3 _position = Vector3.Zero;
+        private Vector3 _scale = Vector3.One;
+        private Vector3 _rotation = Vector3.Zero;
+
         /// <summary>Obtém ou define a posição nos eixos X, Y e Z.</summary>
-        public Vector3 Position3 { get; set; } = Vector3.Zero;
+        public Vector3 Position3
+        {
+            get => _position;
+            set
+            {
+                _oldPosition = _position;
+                _position = value;
+            }
+        }
+
         /// <summary>Obtém ou define a posição no eixo X.</summary>
         public float X { get { return Position3.X; } set { Position3 = new Vector3(value, Y, Z); } }
         /// <summary>Obtém ou define a posição no eixo Y.</summary>
@@ -17,10 +35,18 @@ namespace Microsoft.Xna.Framework
         /// <summary>Obtém ou define a posição no eixo Z.</summary>
         public float Z { get { return Position3.Z; } set { Position3 = new Vector3(X, Y, value); } }
         /// <summary>Obtém ou define a posição através de um Vector2 ignorando o eixo Z.</summary>
-        public Vector2 Position2 { get => new Vector2(Position3.X, Position3.Y); set => Position3 = new Vector3(value.X, value.Y, Position3.Z); }        
+        public Vector2 Position2 { get => new Vector2(Position3.X, Position3.Y); set => Position3 = new Vector3(value.X, value.Y, Position3.Z); }
 
         /// <summary>Obtém ou define a escala nos eixos X, Y e Z.</summary>
-        public Vector3 Scale3 { get; set; } = Vector3.One;
+        public Vector3 Scale3
+        {
+            get => _scale;
+            set
+            {
+                _oldScale = _scale;
+                _scale = value;
+            }
+        }
         /// <summary>Obtém ou define a escala no eixo X.</summary>
         public float Xs { get { return Scale3.X; } set { Scale3 = new Vector3(value, Ys, Zs); } }
         /// <summary>Obtém ou define a escala no eixo Y.</summary>
@@ -31,7 +57,15 @@ namespace Microsoft.Xna.Framework
         public Vector2 Scale2 { get => new Vector2(Scale3.X, Scale3.Y); set => Scale3 = new Vector3(value.X, value.Y, Scale3.Z); }
 
         /// <summary>Obtém ou define a rotação nos eixos X, Y e Z.</summary>
-        public Vector3 Rotation3 { get; set; } = Vector3.Zero;
+        public Vector3 Rotation3
+        {
+            get => _rotation;
+            set
+            {
+                _oldRotation = _rotation;
+                _rotation = value;
+            }
+        }
         /// <summary>Obtém ou define a rotação no eixo X.</summary>
         public float Xr { get { return Rotation3.X; } set { Rotation3 = new Vector3(value, Yr, Zr); } }
         /// <summary>Obtém ou define a rotação no eixo Y.</summary>
@@ -40,6 +74,9 @@ namespace Microsoft.Xna.Framework
         public float Zr { get { return Rotation3.Z; } set { Rotation3 = new Vector3(Xr, Yr, value); } }
         /// <summary>Obtém ou define a rotação em um plano 2D (obtém ou define o valor de Rz)</summary>
         public float Rotation2 { get => Zr; set => Zr = value; }
+
+        /// <summary>Obtém os valores anteriores a modificação atual do objeto.</summary>
+        public CTransformS Old => new CTransformS(_oldPosition, _oldScale, _oldRotation);
 
         /// <summary>
         /// Inicializa uma nova instância da classe.
@@ -90,7 +127,7 @@ namespace Microsoft.Xna.Framework
             this.Position3 = transform.Position3;
             this.Scale3 = transform.Scale3;
             this.Rotation3 = transform.Rotation3;
-        }                
+        }
 
         /// <summary>
         /// Obtém um objeto valor dessa classe.
@@ -143,5 +180,5 @@ namespace Microsoft.Xna.Framework
         {
             return !(left == right);
         }
-    }   
+    }
 }
